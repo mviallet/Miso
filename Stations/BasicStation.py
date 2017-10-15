@@ -3,7 +3,8 @@ Basic environmental monitoring station
 """
 from socket import gethostname
 from datetime import datetime
-from dateutil import tz
+import pytz
+from tzlocal import get_localzone
 from Miso.Charts.PlotlyCharts import GenerateOfflineChart, GenerateOnlineChart, HTMLTemplate
 from Miso.Databases.DBInterface import DBInterface
 
@@ -23,6 +24,9 @@ class BasicStation(object):
         
         # Location of the station
         self.location = location
+
+        # Get station timezone
+        self.timezone = get_localzone()
 
         # Name of the database
         self.database = database
@@ -78,7 +82,7 @@ class BasicStation(object):
         temperature = []
         humidity = []
         for today, time, pre, temp, hum in results:
-            date.append( datetime.strptime("%s %s" %(today, time), '%Y-%m-%d %H:%M:%S').replace(tzinfo=tz.gettz('UTC')).astimezone(tz.tzlocal()) )
+            date.append( datetime.strptime("%s %s" %(today, time), '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.utc).astimezone(self.timezone) )
             pressure.append(pre)
             temperature.append(temp)
             humidity.append(hum)
