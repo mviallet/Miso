@@ -3,6 +3,7 @@ Define some functions to create charts using plotly
 """
 import plotly
 from plotly.graph_objs import Scatter, Layout
+from datetime import datetime
 
 def GenerateOfflineChart(dates, values, field_name, units):
     """
@@ -26,7 +27,7 @@ def GenerateOnlineChart(dates, values, field_name, units):
                               filename='pressure', fileopt='overwrite', auto_open=False)
 
 
-def HTMLTemplate(subPage):
+def HTMLTemplate(hostname, subPage):
     """
     Returns the template for the HTML page
     """
@@ -34,7 +35,7 @@ def HTMLTemplate(subPage):
 <html>
 <head>
 <script src="plotly-latest.min.js"></script>
-<title>Raspberry Pi 2</title> 
+<title>%s</title> 
 <style>    
    body {         
       width: 1024px;         
@@ -49,4 +50,4 @@ def HTMLTemplate(subPage):
 %s
 </body>
 </html>
-""" % (datetime.now().strftime("%d-%m-%Y %H:%M:%S"), subPage)
+""" % (hostname, datetime.now().strftime("%d-%m-%Y %H:%M:%S"), subPage)

@@ -70,8 +70,8 @@ class BasicStation(object):
         """
 
         # Read values from database
-        db = DBInterface.Database(self.database)
-        results = db.Execute("SELECT today, timeofday, pressure, temperature, humidity FROM pth;")
+        db = DBInterface(self.database)
+        results = db.Execute("SELECT today, timeofday, pressure, temperature, humidity FROM %s;"%self.name)
 
         date = []
         pressure = []
@@ -84,9 +84,9 @@ class BasicStation(object):
             humidity.append(hum)
 
         # Generate plots
-        pressureGraph = GenerateChart(date, pressure, "Pressure", "hPa")
-        temperatureGraph = GenerateChart(date, temperature, "Temperature", "Celsus")
-        humidityGraph = GenerateChart(date, humidity, "Humidity", "%")
+        pressureGraph = GenerateOfflineChart(date, pressure, "Pressure", "hPa")
+        temperatureGraph = GenerateOfflineChart(date, temperature, "Temperature", "Celsus")
+        humidityGraph = GenerateOfflineChart(date, humidity, "Humidity", "%")
 
         #pressureOnlineGraph = GenerateOnlineChart
 
@@ -100,7 +100,7 @@ class BasicStation(object):
         """ % (pressureGraph, temperatureGraph, humidityGraph)
 
         # DOM
-        body = HTMLTemplace(self.hostname, subPage)
+        body = HTMLTemplate(self.hostname, subPage)
 
         index = open(self.webpage, 'w')
         index.writelines(body)
